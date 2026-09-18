@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm } from "@inertiajs/vue3";
-import { Pencil, Trash2, X, Check } from "lucide-vue-next";
+import { Plus, Pencil, Trash2, X, CheckCircle } from "lucide-vue-next";
 
 const props = defineProps({
     trips: {
@@ -20,6 +20,26 @@ const props = defineProps({
         default: () => [],
     },
 });
+/*
+Popup de succès
+*/
+const showSuccessPopup = ref(false);
+const successMessage = ref("");
+
+const showSuccess = (message) => {
+    successMessage.value = message;
+    showSuccessPopup.value = true;
+
+    setTimeout(() => {
+        showSuccessPopup.value = false;
+    }, 3000);
+};
+
+/*
+|--------------------------------------------------------------------------
+| Formulaire d'ajout
+|--------------------------------------------------------------------------
+*/
 
 const form = useForm({
     transporter_id: "",
@@ -32,6 +52,30 @@ const form = useForm({
     available_seats: "",
     status: "scheduled",
 });
+
+/*
+|--------------------------------------------------------------------------
+| Ajouter un trajet
+|--------------------------------------------------------------------------
+*/
+
+const submit = () => {
+    form.post(route("trips.store"), {
+        onSuccess: () => {
+            form.reset();
+            form.status = "scheduled";
+
+            showSuccess("Trajet créé avec succès.");
+        },
+    });
+};
+
+/*
+|--------------------------------------------------------------------------
+| Formulaire de modification
+|--------------------------------------------------------------------------
+*/
+
 const editForm = useForm({
     transporter_id: "",
     vehicle_id: "",
@@ -46,14 +90,6 @@ const editForm = useForm({
 
 const editingTrip = ref(null);
 
-const submit = () => {
-    form.post(route("trips.store"), {
-        onSuccess: () => {
-            form.reset();
-            form.status = "scheduled";
-        },
-    });
-};
 const editTrip = (trip) => {
     editingTrip.value = trip;
 
@@ -67,6 +103,7 @@ const editTrip = (trip) => {
     editForm.available_seats = trip.available_seats;
     editForm.status = trip.status;
 };
+
 const updateTrip = () => {
     if (!editingTrip.value) {
         return;
@@ -75,16 +112,28 @@ const updateTrip = () => {
     editForm.put(route("trips.update", editingTrip.value.id), {
         onSuccess: () => {
             editingTrip.value = null;
+
             editForm.reset();
             editForm.status = "scheduled";
+
+            showSuccess("Trajet modifié avec succès.");
         },
     });
 };
+
 const cancelEdit = () => {
     editingTrip.value = null;
+
     editForm.reset();
     editForm.status = "scheduled";
 };
+
+/*
+|--------------------------------------------------------------------------
+| Suppression
+|--------------------------------------------------------------------------
+*/
+
 const deletingTrip = ref(null);
 
 const deleteTrip = (trip) => {
@@ -103,14 +152,57 @@ const confirmDeleteTrip = () => {
     deleteForm.delete(route("trips.destroy", tripId), {
         onSuccess: () => {
             deletingTrip.value = null;
+
+            showSuccess("Trajet supprimé avec succès.");
         },
     });
 };
 </script>
 
 <template>
-    <Head title="Trajets" />
+    <!-- 
+         Popup de succès
+    -->
+    <Transition
+        enter-active-class="transition duration-300 ease-out"
+        enter-from-class="translate-x-full opacity-0"
+        enter-to-class="translate-x-0 opacity-100"
+        leave-active-class="transition duration-300 ease-in"
+        leave-from-class="translate-x-0 opacity-100"
+        leave-to-class="translate-x-full opacity-0"
+    >
+        <div
+            v-if="showSuccessPopup"
+            class="fixed right-6 top-6 z-[100] flex w-full max-w-sm items-start gap-3 rounded-xl border border-green-200 bg-white p-4 shadow-lg"
+        >
+            <!-- Cercle de succès -->
+            <div
+                class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-green-100"
+            >
+                <CheckCircle :size="22" class="text-green-600" />
+            </div>
 
+            <!-- Message -->
+            <div class="flex-1">
+                <p class="font-semibold text-gray-900">Opération réussie</p>
+
+                <p class="mt-1 text-sm text-gray-600">
+                    {{ successMessage }}
+                </p>
+            </div>
+
+            <!-- Fermer -->
+            <button
+                type="button"
+                @click="showSuccessPopup = false"
+                class="rounded-lg p-1 text-gray-400 transition hover:bg-gray-100 hover:text-gray-600"
+            >
+                <X :size="18" />
+            </button>
+        </div>
+    </Transition>
+
+    <Head title="Trajets" />
     <AuthenticatedLayout>
         <!-- MODAL DE MODIFICATION -->
         <div
@@ -656,8 +748,10 @@ const confirmDeleteTrip = () => {
                                 <button
                                     type="submit"
                                     :disabled="form.processing"
-                                    class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition duration-200 hover:bg-blue-700 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50"
+                                    class="inline-flex items-center justify-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition duration-200 hover:bg-green-700 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50"
                                 >
+                                    <Plus v-if="!form.processing" :size="18" />
+
                                     {{
                                         form.processing
                                             ? "Enregistrement..."
@@ -793,7 +887,13 @@ const confirmDeleteTrip = () => {
                                             <div
                                                 class="text-sm font-medium text-gray-900"
                                             >
-                                                {{ trip.departure_date }}
+                                                {{
+                                                    new Date(
+                                                        trip.departure_date,
+                                                    ).toLocaleDateString(
+                                                        "fr-FR",
+                                                    )
+                                                }}
                                             </div>
 
                                             <div class="text-xs text-gray-500">
@@ -855,7 +955,7 @@ const confirmDeleteTrip = () => {
                                                 <button
                                                     type="button"
                                                     @click="editTrip(trip)"
-                                                    class="inline-flex items-center justify-center rounded-lg bg-blue-50 p-2 text-blue-600 transition duration-200 hover:bg-blue-100 hover:text-blue-700 hover:scale-105"
+                                                    class="inline-flex items-center justify-center rounded-lg p-2 text-amber-600 hover:bg-amber-50"
                                                     title="Modifier"
                                                 >
                                                     <Pencil class="h-4 w-4" />

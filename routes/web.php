@@ -1,10 +1,11 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\TransporterController;
+use App\Http\Controllers\TripController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VehicleController;
-use App\Http\Controllers\TripController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -52,7 +53,7 @@ Route::put('/transporters/{transporter}', [TransporterController::class, 'update
 Route::delete('/transporters/{transporter}', [TransporterController::class, 'destroy'])
     ->middleware(['auth', 'verified', 'admin'])
     ->name('transporters.destroy');
-    
+
 // routes vehicles
 Route::get('/vehicles', [VehicleController::class, 'index'])->middleware(['auth', 'verified', 'admin'])->name(
     'vehicles.index',
@@ -61,21 +62,29 @@ Route::post('/vehicles', [VehicleController::class, 'store'])
     ->middleware(['auth', 'verified', 'admin'])
     ->name('vehicles.store');
 
-Route::put('/vehicles/{vehicle}', [VehicleController::class, 'update'])
-    ->middleware(['auth', 'verified', 'admin'])
-    ->name('vehicles.update');
+Route::put('/vehicles/{vehicle}', [VehicleController::class, 'update'])->middleware([
+    'auth',
+    'verified',
+    'admin',
+])->name('vehicles.update');
 
 Route::delete('/vehicles/{vehicle}', [VehicleController::class, 'destroy'])
     ->middleware(['auth', 'verified', 'admin'])
     ->name('vehicles.destroy');
 
-    //routes trips
-Route::resource('trips', TripController::class)
-    ->only(['index', 'store', 'update', 'destroy']);
+//routes trips
+Route::resource('trips', TripController::class)->only(['index', 'store', 'update', 'destroy']);
 
 Route::delete('/users/{user}', [UserController::class, 'destroy'])
     ->middleware(['auth', 'verified', 'admin'])
     ->name('users.destroy');
+
+//routes reservations
+Route::resource('reservations', ReservationController::class)->only(['index', 'store', 'update', 'destroy']);
+
+Route::put('/reservations/{reservation}', [ReservationController::class, 'update'])->name('reservations.update');
+
+Route::delete('/reservations/{reservation}', [ReservationController::class, 'destroy'])->name('reservations.destroy');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

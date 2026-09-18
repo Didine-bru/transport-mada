@@ -13,7 +13,7 @@ const showingNavigationDropdown = ref(false);
 </script>
 
 <template>
-    <div class="relative min-h-screen overflow-hidden bg-slate-50">
+    <div class="relative min-h-screen bg-slate-50">
         <!-- ARRIÈRE-PLAN DÉCORATIF -->
 
         <!-- Halo bleu -->
@@ -33,7 +33,7 @@ const showingNavigationDropdown = ref(false);
 
         <!-- NAVIGATION -->
 
-        <nav class="relative z-20 border-b border-gray-100 bg-white">
+        <nav class="relative border-b border-gray-100 bg-white">
             <!-- Primary Navigation Menu -->
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div class="flex h-16 justify-between">
@@ -93,6 +93,13 @@ const showingNavigationDropdown = ref(false);
                                 :active="route().current('trips.*')"
                             >
                                 Trajets
+                            </NavLink>
+                            <NavLink
+                                v-if="page.props.auth.user.role === 'admin'"
+                                :href="route('reservations.index')"
+                                :active="route().current('reservations.*')"
+                            >
+                                Réservations
                             </NavLink>
                         </div>
                     </div>
@@ -241,6 +248,13 @@ const showingNavigationDropdown = ref(false);
                     >
                         Trajets
                     </ResponsiveNavLink>
+                    <ResponsiveNavLink
+                        v-if="page.props.auth.user.role === 'admin'"
+                        :href="route('reservations.index')"
+                        :active="route().current('reservations.*')"
+                    >
+                        Réservations
+                    </ResponsiveNavLink>
                 </div>
 
                 <!-- SETTINGS MOBILE -->
@@ -285,7 +299,7 @@ const showingNavigationDropdown = ref(false);
 
         <!-- PAGE CONTENT -->
 
-        <main class="relative z-10">
+        <main class="relative">
             <slot />
         </main>
     </div>

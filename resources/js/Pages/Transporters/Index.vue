@@ -372,7 +372,7 @@ const getStatusClass = (isActive) => {
 
         <div
             v-if="showCreateModal"
-            class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
+            class="fixed inset-0 z-[100] flex items-start justify-center overflow-y-auto bg-black/50 px-4 py-8"
         >
             <div class="w-full max-w-lg rounded-xl bg-white p-6 shadow-xl">
                 <!-- En-tête -->
@@ -638,7 +638,9 @@ const getStatusClass = (isActive) => {
             v-if="showDeleteModal"
             class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
         >
-            <div class="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
+            <div
+                class="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-xl bg-white p-6 shadow-xl"
+            >
                 <!-- En-tête -->
 
                 <div class="flex items-center gap-3">

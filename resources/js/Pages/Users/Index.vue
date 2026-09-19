@@ -4,10 +4,43 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm } from "@inertiajs/vue3";
 import { Plus, Pencil, Trash2, Save, CheckCircle } from "lucide-vue-next";
 
+const search = ref("");
 const props = defineProps({
     users: Array,
     flash: Object,
 });
+const filteredUsers = () => {
+    if (!search.value.trim()) {
+        return props.users;
+    }
+
+    const keyword = search.value.toLowerCase();
+
+    return props.users.filter((user) => {
+        return (
+            user.name.toLowerCase().includes(keyword) ||
+            user.email.toLowerCase().includes(keyword)
+        );
+    });
+};
+const totalUsers = () => {
+    return props.users.length;
+};
+
+const totalAdmins = () => {
+    return props.users.filter((user) => user.role === "admin").length;
+};
+
+const totalTransporteurs = () => {
+    return props.users.filter((user) => user.role === "transporteur").length;
+};
+const totalAgents = () => {
+    return props.users.filter((user) => user.role === "agent").length;
+};
+
+const totalClients = () => {
+    return props.users.filter((user) => user.role === "client").length;
+};
 const showSuccessPopup = ref(false);
 
 watch(
@@ -39,9 +72,7 @@ const submit = () => {
     if (editingUser.value) {
         form.put(route("users.update", editingUser.value.id), {
             onSuccess: () => {
-                showCreateModal.value = false;
-                editingUser.value = null;
-                form.reset();
+                closeModal();
             },
         });
 
@@ -50,8 +81,7 @@ const submit = () => {
 
     form.post(route("users.store"), {
         onSuccess: () => {
-            showCreateModal.value = false;
-            form.reset();
+            closeModal();
         },
     });
 };
@@ -63,6 +93,14 @@ const openCreateModal = () => {
     form.role = "client";
 
     showCreateModal.value = true;
+};
+const closeModal = () => {
+    showCreateModal.value = false;
+    editingUser.value = null;
+
+    form.reset();
+    form.role = "client";
+    form.clearErrors();
 };
 const editUser = (user) => {
     editingUser.value = user;
@@ -109,6 +147,35 @@ const getRoleClass = (role) => {
             return "bg-gray-100 text-gray-700";
     }
 };
+const formatDate = (date) => {
+    if (!date) {
+        return "";
+    }
+
+    return new Date(date).toLocaleDateString("fr-FR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+    });
+};
+const getRoleLabel = (role) => {
+    switch (role) {
+        case "admin":
+            return "Administrateur";
+
+        case "transporteur":
+            return "Transporteur";
+
+        case "agent":
+            return "Agent";
+
+        case "client":
+            return "Client";
+
+        default:
+            return role;
+    }
+};
 </script>
 
 <template>
@@ -141,7 +208,7 @@ const getRoleClass = (role) => {
 
             <button
                 type="button"
-                @click="showSuccessPopup = false"
+                @click="closeModal"
                 class="rounded-lg p-1 text-gray-400 transition hover:bg-gray-100 hover:text-gray-600"
             >
                 ✕
@@ -161,44 +228,139 @@ const getRoleClass = (role) => {
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
-                        <div class="mb-6 flex items-center justify-between">
-                            <div>
-                                <h3 class="text-2xl font-bold">Utilisateurs</h3>
+                        <div class="mb-6">
+                            <!-- En-tête -->
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h3 class="text-2xl font-bold">
+                                        Utilisateurs
+                                    </h3>
 
-                                <p class="mt-1 text-gray-600">
-                                    Liste des utilisateurs enregistrés.
+                                    <p class="mt-1 text-gray-600">
+                                        Liste des utilisateurs enregistrés.
+                                    </p>
+                                </div>
+
+                                <button
+                                    type="button"
+                                    @click="openCreateModal"
+                                    class="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-green-700"
+                                >
+                                    <Plus :size="18" />
+                                    Ajouter
+                                </button>
+                            </div>
+
+                            <!-- Recherche -->
+                            <div class="mt-5">
+                                <input
+                                    v-model="search"
+                                    type="text"
+                                    placeholder="Rechercher par nom ou email..."
+                                    class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:w-80"
+                                />
+                            </div>
+                        </div>
+                        <!-- Statistiques -->
+                        <div
+                            class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5"
+                        >
+                            <!-- Total -->
+                            <div
+                                class="rounded-xl border border-gray-100 bg-white p-5 shadow-sm"
+                            >
+                                <p class="text-sm font-medium text-gray-500">
+                                    Total utilisateurs
+                                </p>
+                                <p
+                                    class="mt-2 text-2xl font-bold text-gray-800"
+                                >
+                                    {{ totalUsers() }}
                                 </p>
                             </div>
 
-                            <button
-                                type="button"
-                                @click="openCreateModal"
-                                class="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-green-700"
+                            <!-- Administrateurs -->
+                            <div
+                                class="rounded-xl border border-gray-100 bg-white p-5 shadow-sm"
                             >
-                                <Plus :size="18" />
-                                Ajouter
-                            </button>
-                        </div>
+                                <p class="text-sm font-medium text-gray-500">
+                                    Administrateurs
+                                </p>
+                                <p class="mt-2 text-2xl font-bold text-red-600">
+                                    {{ totalAdmins() }}
+                                </p>
+                            </div>
 
+                            <!-- Transporteurs -->
+                            <div
+                                class="rounded-xl border border-gray-100 bg-white p-5 shadow-sm"
+                            >
+                                <p class="text-sm font-medium text-gray-500">
+                                    Transporteurs
+                                </p>
+                                <p
+                                    class="mt-2 text-2xl font-bold text-purple-600"
+                                >
+                                    {{ totalTransporteurs() }}
+                                </p>
+                            </div>
+                            <!-- Agents -->
+                            <div
+                                class="rounded-xl border border-gray-100 bg-white p-5 shadow-sm"
+                            >
+                                <p class="text-sm font-medium text-gray-500">
+                                    Agents
+                                </p>
+                                <p
+                                    class="mt-2 text-2xl font-bold text-orange-600"
+                                >
+                                    {{ totalAgents() }}
+                                </p>
+                            </div>
+                            <!-- Clients -->
+                            <div
+                                class="rounded-xl border border-gray-100 bg-white p-5 shadow-sm"
+                            >
+                                <p class="text-sm font-medium text-gray-500">
+                                    Clients
+                                </p>
+                                <p
+                                    class="mt-2 text-2xl font-bold text-green-600"
+                                >
+                                    {{ totalClients() }}
+                                </p>
+                            </div>
+                        </div>
                         <div class="overflow-x-auto">
                             <table class="min-w-full divide-y divide-gray-200">
-                                <thead>
+                                <thead class="bg-gray-50">
                                     <tr
                                         class="text-left text-sm font-semibold text-gray-700"
                                     >
                                         <th class="px-4 py-3">Nom</th>
+
                                         <th class="px-4 py-3">Email</th>
+
                                         <th class="px-4 py-3">Rôle</th>
+
                                         <th class="px-4 py-3">Date</th>
-                                        <th class="px-4 py-3 text-right">
+
+                                        <th class="px-4 py-3 text-center">
                                             Actions
                                         </th>
                                     </tr>
                                 </thead>
-
                                 <tbody class="divide-y divide-gray-200">
+                                    <tr v-if="filteredUsers().length === 0">
+                                        <td
+                                            colspan="5"
+                                            class="px-4 py-10 text-center text-sm text-gray-500"
+                                        >
+                                            Aucun utilisateur trouvé.
+                                        </td>
+                                    </tr>
                                     <tr
-                                        v-for="user in users"
+                                        v-for="user in filteredUsers()"
                                         :key="user.id"
                                         class="text-sm"
                                     >
@@ -215,16 +377,18 @@ const getRoleClass = (role) => {
                                                 class="rounded-full px-3 py-1 text-xs font-semibold"
                                                 :class="getRoleClass(user.role)"
                                             >
-                                                {{ user.role }}
+                                                {{ getRoleLabel(user.role) }}
                                             </span>
                                         </td>
 
                                         <td class="px-4 py-3 text-gray-600">
-                                            {{ user.created_at }}
+                                            {{ formatDate(user.created_at) }}
                                         </td>
-                                        <td class="px-4 py-3">
+                                        <td
+                                            class="px-4 py-3 text-center align-middle"
+                                        >
                                             <div
-                                                class="flex items-center justify-end gap-2"
+                                                class="flex items-center justify-center gap-2"
                                             >
                                                 <button
                                                     type="button"
@@ -257,7 +421,7 @@ const getRoleClass = (role) => {
         <!-- Modal Ajouter un utilisateur -->
         <div
             v-if="showCreateModal"
-            class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
+            class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 px-4"
         >
             <div class="w-full max-w-lg rounded-xl bg-white p-6 shadow-xl">
                 <div class="flex items-center justify-between">
@@ -336,13 +500,23 @@ const getRoleClass = (role) => {
                             class="block text-sm font-medium text-gray-700"
                         >
                             Mot de passe
+                            <span
+                                v-if="editingUser"
+                                class="font-normal text-gray-500"
+                            >
+                                (laisser vide pour conserver l'actuel)
+                            </span>
                         </label>
 
                         <input
                             id="password"
                             v-model="form.password"
                             type="password"
-                            placeholder="Minimum 8 caractères"
+                            :placeholder="
+                                editingUser
+                                    ? 'Nouveau mot de passe (optionnel)'
+                                    : 'Minimum 8 caractères'
+                            "
                             class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                         />
 
@@ -386,7 +560,7 @@ const getRoleClass = (role) => {
                     <div class="flex justify-end gap-3 pt-2">
                         <button
                             type="button"
-                            @click="showCreateModal = false"
+                            @click="closeModal"
                             class="rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-200"
                         >
                             Annuler
@@ -412,22 +586,12 @@ const getRoleClass = (role) => {
                         </button>
                     </div>
                 </form>
-
-                <div class="mt-6 flex justify-end">
-                    <button
-                        type="button"
-                        @click="showCreateModal = false"
-                        class="rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200"
-                    >
-                        Fermer
-                    </button>
-                </div>
             </div>
         </div>
         <!-- Modal de confirmation de suppression -->
         <div
             v-if="showDeleteModal"
-            class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
+            class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 px-4"
         >
             <div class="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
                 <!-- En-tête -->

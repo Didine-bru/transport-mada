@@ -62,8 +62,7 @@ defineProps({
                     <Link
                         v-if="auth.user.role === 'admin'"
                         :href="route('users.index')"
-                        class="group relative overflow-hidden rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
-                    >
+                        class="group relative overflow-hidden rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
                         <!-- Décoration -->
                         <div
                              class="absolute -right-8 -top-8 h-28 w-28 rounded-full bg-blue-50 transition-transform duration-500 group-hover:scale-125"
@@ -82,8 +81,7 @@ defineProps({
                             </h3>
 
                             <p class="mt-2 text-sm leading-6 text-gray-500">
-                                Gérez les comptes utilisateurs et leurs rôles
-                                dans l'application.
+                                Gérez les comptes utilisateurs et leurs rôles.
                             </p>
 
                             <div
@@ -102,11 +100,10 @@ defineProps({
                     <Link
                         v-if="auth.user.role === 'admin'"
                         :href="route('transporters.index')"
-                        class="group relative overflow-hidden rounded-2xl bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-                    >
+                        class="group relative overflow-hidden rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
                         <!-- Décoration -->
                         <div
-                            class="absolute -right-8 -top-8 h-28 w-28 rounded-full bg-emerald-50 transition-transform duration-500 group-hover:scale-150"
+                            class="absolute -right-8 -top-8 h-28 w-28 rounded-full bg-emerald-50 transition-transform duration-500 group-hover:scale-125"
                         ></div>
 
                         <div class="relative">
@@ -141,11 +138,10 @@ defineProps({
                     <Link
                         v-if="auth.user.role === 'admin'"
                         :href="route('vehicles.index')"
-                        class="group relative overflow-hidden rounded-2xl bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-                    >
+                        class="group relative overflow-hidden rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
                         <!-- Décoration -->
                         <div
-                            class="absolute -right-8 -top-8 h-28 w-28 rounded-full bg-orange-50 transition-transform duration-500 group-hover:scale-150"
+                            class="absolute -right-8 -top-8 h-28 w-28 rounded-full bg-orange-50 transition-transform duration-500 group-hover:scale-125"
                         ></div>
 
                         <div class="relative">

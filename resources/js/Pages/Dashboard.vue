@@ -23,25 +23,23 @@ defineProps({
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <!-- Bienvenue -->
                 <div
-                    class="mb-8 overflow-hidden rounded-2xl bg-white shadow-sm transition duration-300 hover:shadow-md"
+                    class="mb-8 overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition duration-300 hover:shadow-md"
                 >
-                    <div class="relative p-6">
+                    <div class="relative p-7 sm:p-8">
                         <!-- Petite décoration -->
                         <div
                             class="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-blue-50"
                         ></div>
 
                         <div class="relative">
-                            <h3 class="flex items-center text-2xl font-bold text-gray-900">
+                            <h3 class="flex items-center text-2xl font-bold tracking-tight text-gray-900">
                                 Bienvenue, {{ auth.user.name }}
 
                                 <Sparkles
-                                    class="ml-2 h-6 w-6 text-blue-500
-                                        transition-transform duration-300
-                                        hover:rotate-12 hover:scale-110"
+                                    class="ml-2 h-6 w-6 text-blue-500 transition-transform duration-300 hover:rotate-12 hover:scale-110"
                                 />
                             </h3>
-                            
+
                             <p class="mt-2 text-gray-500">
                                 Heureux de vous revoir dans votre espace de
                                 gestion.
@@ -64,11 +62,11 @@ defineProps({
                     <Link
                         v-if="auth.user.role === 'admin'"
                         :href="route('users.index')"
-                        class="group relative overflow-hidden rounded-2xl bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+                        class="group relative overflow-hidden rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
                     >
                         <!-- Décoration -->
                         <div
-                            class="absolute -right-8 -top-8 h-28 w-28 rounded-full bg-blue-50 transition-transform duration-500 group-hover:scale-150"
+                             class="absolute -right-8 -top-8 h-28 w-28 rounded-full bg-blue-50 transition-transform duration-500 group-hover:scale-125"
                         ></div>
 
                         <div class="relative">

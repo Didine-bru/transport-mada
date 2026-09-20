@@ -2,8 +2,6 @@
 import Checkbox from "@/Components/Checkbox.vue";
 import GuestLayout from "@/Layouts/GuestLayout.vue";
 import InputError from "@/Components/InputError.vue";
-import InputLabel from "@/Components/InputLabel.vue";
-import TextInput from "@/Components/TextInput.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 
 import { Mail, LockKeyhole, Eye, EyeOff, LogIn } from "lucide-vue-next";
@@ -35,6 +33,22 @@ const submit = () => {
 <template>
     <GuestLayout>
         <Head title="Log in" />
+        <div class="mb-7">
+            <div
+                class="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-100 text-indigo-600"
+            >
+                <LogIn :size="24" />
+            </div>
+
+            <h1 class="text-2xl font-bold tracking-tight text-gray-800">
+                Bienvenue sur Transport Mada
+            </h1>
+
+            <p class="mt-2 text-sm leading-6 text-gray-500">
+                Connectez-vous à votre espace pour gérer facilement vos
+                réservations et vos trajets.
+            </p>
+        </div>
 
         <div v-if="status" class="mb-4 text-sm font-medium text-green-600">
             {{ status }}

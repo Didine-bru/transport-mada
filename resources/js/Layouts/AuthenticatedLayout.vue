@@ -1,6 +1,13 @@
 <script setup>
 import { ref } from "vue";
-import ApplicationLogo from "@/Components/ApplicationLogo.vue";
+import {
+    Bus,
+    LayoutDashboard,
+    Users,
+    Truck,
+    Route,
+    CalendarCheck,
+} from "lucide-vue-next";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import NavLink from "@/Components/NavLink.vue";
@@ -42,9 +49,19 @@ const showingNavigationDropdown = ref(false);
                         <!-- Logo -->
                         <div class="flex shrink-0 items-center">
                             <Link :href="route('dashboard')">
-                                <ApplicationLogo
-                                    class="block h-9 w-auto fill-current text-gray-800"
-                                />
+                                <div class="flex items-center gap-2">
+                                    <div
+                                        class="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-100 text-indigo-600"
+                                    >
+                                        <Bus :size="21" />
+                                    </div>
+
+                                    <span
+                                        class="text-lg font-bold tracking-tight text-indigo-600"
+                                    >
+                                        Transport Mada
+                                    </span>
+                                </div>
                             </Link>
                         </div>
 
@@ -57,7 +74,10 @@ const showingNavigationDropdown = ref(false);
                                 :href="route('dashboard')"
                                 :active="route().current('dashboard')"
                             >
-                                Dashboard
+                                <span class="inline-flex items-center gap-2">
+                                    <LayoutDashboard :size="17" />
+                                    Tableau de bord
+                                </span>
                             </NavLink>
 
                             <!-- Utilisateurs -->
@@ -66,7 +86,10 @@ const showingNavigationDropdown = ref(false);
                                 :href="route('users.index')"
                                 :active="route().current('users.*')"
                             >
-                                Utilisateurs
+                                <span class="inline-flex items-center gap-2">
+                                    <Users :size="17" />
+                                    Utilisateurs
+                                </span>
                             </NavLink>
 
                             <!-- Transporteurs -->
@@ -75,7 +98,10 @@ const showingNavigationDropdown = ref(false);
                                 :href="route('transporters.index')"
                                 :active="route().current('transporters.*')"
                             >
-                                Transporteurs
+                                <span class="inline-flex items-center gap-2">
+                                    <Truck :size="17" />
+                                    Transporteurs
+                                </span>
                             </NavLink>
 
                             <!-- Véhicules -->
@@ -84,7 +110,10 @@ const showingNavigationDropdown = ref(false);
                                 :href="route('vehicles.index')"
                                 :active="route().current('vehicles.*')"
                             >
-                                Véhicules
+                                <span class="inline-flex items-center gap-2">
+                                    <Bus :size="17" />
+                                    Véhicules
+                                </span>
                             </NavLink>
                             <!-- Trajets -->
                             <NavLink
@@ -92,14 +121,20 @@ const showingNavigationDropdown = ref(false);
                                 :href="route('trips.index')"
                                 :active="route().current('trips.*')"
                             >
-                                Trajets
+                                <span class="inline-flex items-center gap-2">
+                                    <Route :size="17" />
+                                    Trajets
+                                </span>
                             </NavLink>
                             <NavLink
                                 v-if="page.props.auth.user.role === 'admin'"
                                 :href="route('reservations.index')"
                                 :active="route().current('reservations.*')"
                             >
-                                Réservations
+                                <span class="inline-flex items-center gap-2">
+                                    <CalendarCheck :size="17" />
+                                    Réservations
+                                </span>
                             </NavLink>
                         </div>
                     </div>

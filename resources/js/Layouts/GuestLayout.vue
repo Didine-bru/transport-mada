@@ -1,5 +1,6 @@
 <script setup>
 import { Link } from "@inertiajs/vue3";
+import { Bus } from "lucide-vue-next";
 </script>
 
 <template>
@@ -28,11 +29,11 @@ import { Link } from "@inertiajs/vue3";
                     href="/"
                     class="inline-flex items-center text-2xl font-bold tracking-tight text-indigo-600"
                 >
-                    <span
-                        class="mr-2 flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-100 text-sm font-bold text-indigo-600"
+                    <div
+                        class="mr-3 flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-100 text-indigo-600"
                     >
-                        TM
-                    </span>
+                        <Bus :size="22" />
+                    </div>
 
                     Transport Mada
                 </Link>
@@ -44,7 +45,7 @@ import { Link } from "@inertiajs/vue3";
 
             <!-- Carte de connexion -->
             <div
-                class="relative overflow-hidden rounded-2xl border border-gray-100 bg-white px-6 py-8 shadow-sm transition duration-300 hover:shadow-md sm:px-8"
+                class="relative overflow-hidden rounded-2xl border border-gray-100 bg-white px-7 py-9 shadow-sm transition duration-300 hover:shadow-md"
             >
                 <!-- Petite décoration de la carte -->
                 <div

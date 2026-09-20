@@ -1,13 +1,47 @@
 <script setup>
+import { computed, ref } from "vue";
 import { Head, Link } from "@inertiajs/vue3";
+import { Calendar, Clock, Armchair, Bus, Search  } from "lucide-vue-next";
 
-defineProps({
+
+const departureCity = ref("");
+const destinationCity = ref("");
+const departureDate = ref("");
+const filteredTrips = computed(() => {
+    return props.trips.filter((trip) => {
+        const departureMatch =
+            !departureCity.value ||
+            trip.departure_city
+                .toLowerCase()
+                .includes(departureCity.value.toLowerCase());
+
+        const destinationMatch =
+            !destinationCity.value ||
+            trip.destination_city
+                .toLowerCase()
+                .includes(destinationCity.value.toLowerCase());
+
+        const dateMatch =
+            !departureDate.value ||
+            trip.departure_date === departureDate.value;
+
+        return departureMatch && destinationMatch && dateMatch;
+    });
+});
+const searchTrips = () => {
+    // La recherche sera appliquée dans filteredTrips()
+};
+const props = defineProps({
     auth: Object,
     canLogin: {
         type: Boolean,
     },
     canRegister: {
         type: Boolean,
+    },
+    trips: {
+        type: Array,
+        default: () => [],
     },
 });
 </script>
@@ -105,7 +139,7 @@ defineProps({
                 <!-- Image du véhicule -->
                 <div
                     class="mt-12 w-full max-w-lg lg:mt-0"
-                    style="animation: fadeInRight 0.8s ease-out;"
+                    style="animation: fadeInRight 0.8s ease-out"
                 >
                     <div class="relative">
                         <!-- Décoration derrière l'image -->
@@ -124,7 +158,7 @@ defineProps({
                             />
                             <div
                                 class="absolute bottom-5 left-5 rounded-xl bg-white px-4 py-3 shadow-xl"
-                                style="animation: float 3s ease-in-out infinite;"
+                                style="animation: float 3s ease-in-out infinite"
                             >
                                 <div class="flex items-center gap-3">
                                     <div
@@ -154,7 +188,11 @@ defineProps({
 
         <!-- Ancre temporaire -->
         <!-- Pourquoi choisir Transport Mada -->
-        <section id="apropos" class="bg-white py-20">
+        <section
+            id="apropos"
+            class="bg-white py-20"
+            style="animation: fadeInUp 0.8s ease-out"
+        >
             <div class="mx-auto max-w-7xl px-6">
                 <!-- Titre -->
                 <div class="mx-auto max-w-2xl text-center">
@@ -242,6 +280,187 @@ defineProps({
         </section>
 
         <!-- Ancre trajets -->
-        <div id="trajets"></div>
+        <section
+            id="trajets"
+            class="bg-slate-50 py-20"
+            style="animation: fadeInUp 0.8s ease-out"
+        >
+            <div class="mx-auto max-w-7xl px-6">
+                <div class="mx-auto max-w-2xl text-center">
+                    <p
+                        class="text-sm font-semibold uppercase tracking-wider text-indigo-600"
+                    >
+                        Nos trajets
+                    </p>
+
+                    <h2
+                        class="mt-2 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl"
+                    >
+                        Trouvez votre prochain trajet
+                    </h2>
+
+                    <p class="mt-4 text-lg text-slate-600">
+                        Recherchez facilement un trajet et préparez votre
+                        voyage.
+                    </p>
+                </div>
+
+                <div
+                    class="mx-auto mt-10 max-w-4xl rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
+                >
+                    <div class="grid gap-5 md:grid-cols-3">
+                        <div>
+                            <label
+                                class="mb-2 block text-sm font-medium text-slate-700"
+                            >
+                                Départ
+                            </label>
+
+                            <input
+                                v-model="departureCity"
+                                type="text"
+                                placeholder="Ex : Antananarivo"
+                                class="w-full rounded-lg border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                            />
+                        </div>
+
+                        <div>
+                            <label
+                                class="mb-2 block text-sm font-medium text-slate-700"
+                            >
+                                Destination
+                            </label>
+
+                            <input
+                                v-model="destinationCity"
+                                type="text"
+                                placeholder="Ex : Toamasina"
+                                class="w-full rounded-lg border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                            />
+                        </div>
+
+                        <div>
+                            <label
+                                class="mb-2 block text-sm font-medium text-slate-700"
+                            >
+                                Date du voyage
+                            </label>
+
+                            <input
+                                v-model="departureDate"
+                                type="date"
+                                class="w-full rounded-lg border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="mt-6 flex justify-center">
+                        <button
+                            type="button"
+                            @click="searchTrips"
+                            class="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700"
+                        >
+                            <Search :size="18" />
+                            Rechercher un trajet
+                        </button>
+                    </div>
+                </div>
+                <div class="mx-auto mt-12 max-w-6xl">
+                    <h3 class="text-2xl font-bold text-slate-900">
+                        Trajets disponibles
+                    </h3>
+
+                    <p class="mt-2 text-slate-600">
+                        Découvrez les prochains trajets disponibles.
+                    </p>
+
+                    <div
+                       v-if="filteredTrips.length > 0"
+                        class="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3"
+                    >
+                        <div
+                            v-for="trip in filteredTrips"
+                            :key="trip.id"
+                            class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+                        >
+                            <div class="flex items-center justify-between">
+                                <span
+                                    class="rounded-full bg-indigo-100 px-3 py-1 text-xs font-semibold text-indigo-700"
+                                >
+                                    Disponible
+                                </span>
+
+                                <span class="text-lg font-bold text-slate-900">
+                                    {{
+                                        Number(trip.price).toLocaleString(
+                                            "fr-FR",
+                                        )
+                                    }}
+                                    Ar
+                                </span>
+                            </div>
+
+                            <div class="mt-5">
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 text-indigo-600"
+                                    >
+                                       <Bus :size="20" />
+                                    </div>
+
+                                    <div>
+                                        <p class="font-semibold text-slate-900">
+                                            {{ trip.departure_city }}
+                                        </p>
+
+                                        <p class="text-sm text-slate-500">
+                                            vers {{ trip.destination_city }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-5 space-y-2 text-sm text-slate-600">
+                                <p class="flex items-center gap-2 text-sm text-slate-600">
+                                    <Calendar :size="17" />
+                                    {{
+                                        new Date(
+                                            trip.departure_date,
+                                        ).toLocaleDateString("fr-FR")
+                                    }}
+                                </p>
+
+                                <p class="flex items-center gap-2 text-sm text-slate-600">
+                                    <Clock :size="17" />
+                                     {{ trip.departure_time }}</p>
+
+                                <p class="flex items-center gap-2 text-sm text-slate-600">
+                                    <Armchair :size="17" /> {{ trip.available_seats }} place(s)
+                                    disponible(s)
+                                </p>
+                            </div>
+
+                            <div class="mt-6">
+                                <Link
+                                    href="/login"
+                                    class="block w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-center text-sm font-semibold text-white transition hover:bg-indigo-700"
+                                >
+                                    Réserver
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        v-else
+                        class="mt-6 rounded-xl border border-slate-200 bg-white p-8 text-center"
+                    >
+                        <p class="text-slate-500">
+                            Aucun trajet disponible pour le moment.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
 </template>

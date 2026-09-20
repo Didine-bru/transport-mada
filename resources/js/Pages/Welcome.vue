@@ -22,33 +22,33 @@ defineProps({
                 class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4"
             >
                 <!-- Logo -->
-                <Link href="/" class="text-xl font-bold text-green-600">
+                <Link href="/" class="text-xl font-bold text-indigo-600">
                     Transport Mada
                 </Link>
 
                 <!-- Menu -->
                 <div class="hidden items-center gap-8 md:flex">
-                    <Link href="/" class="text-sm font-medium text-green-600">
+                    <Link href="/" class="text-sm font-medium text-indigo-600">
                         Accueil
                     </Link>
 
                     <a
                         href="#trajets"
-                        class="text-sm font-medium text-slate-600 transition hover:text-green-600"
+                        class="text-sm font-medium text-slate-600 transition hover:text-indigo-600"
                     >
                         Trajets
                     </a>
 
                     <a
                         href="#apropos"
-                        class="text-sm font-medium text-slate-600 transition hover:text-green-600"
+                        class="text-sm font-medium text-slate-600 transition hover:text-indigo-600"
                     >
                         À propos
                     </a>
 
                     <Link
                         href="/login"
-                        class="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-green-700"
+                        class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-indigo-700"
                     >
                         Se connecter
                     </Link>
@@ -58,15 +58,17 @@ defineProps({
 
         <!-- Hero -->
         <section
-            class="relative overflow-hidden bg-gradient-to-br from-green-600 to-green-700"
+            class="relative overflow-hidden bg-gradient-to-br from-indigo-700 to-violet-700"
         >
             <div
                 class="mx-auto max-w-7xl px-6 py-20 lg:flex lg:items-center lg:justify-between lg:gap-12"
             >
                 <!-- Texte -->
-                <div class="max-w-2xl text-white">
+                <div
+                    class="max-w-2xl text-white animate-[fadeInLeft_0.8s_ease-out]"
+                >
                     <p
-                        class="mb-4 text-sm font-semibold uppercase tracking-wider text-green-100"
+                        class="mb-4 text-sm font-semibold uppercase tracking-wider text-indigo-100"
                     >
                         Votre voyage commence ici
                     </p>
@@ -77,7 +79,7 @@ defineProps({
                         Réservez votre voyage en toute simplicité
                     </h1>
 
-                    <p class="mt-6 max-w-xl text-lg leading-8 text-green-50">
+                    <p class="mt-6 max-w-xl text-lg leading-8 text-indigo-50">
                         Trouvez facilement votre trajet, choisissez votre
                         transporteur et réservez vos places en quelques clics.
                     </p>
@@ -85,7 +87,7 @@ defineProps({
                     <div class="mt-8 flex flex-wrap gap-4">
                         <a
                             href="#trajets"
-                            class="rounded-lg bg-white px-6 py-3 text-sm font-semibold text-green-700 shadow-sm transition hover:bg-green-50"
+                            class="rounded-lg bg-white px-6 py-3 text-sm font-semibold text-indigo-700 shadow-sm transition hover:bg-indigo-50"
                         >
                             Rechercher un trajet
                         </a>
@@ -100,66 +102,50 @@ defineProps({
                 </div>
 
                 <!-- Carte visuelle -->
-                <div class="mt-12 w-full max-w-md lg:mt-0">
-                    <div class="rounded-2xl bg-white p-6 shadow-2xl">
-                        <div class="mb-5">
-                            <h2 class="text-xl font-bold text-slate-800">
-                                Rechercher un trajet
-                            </h2>
+                <!-- Image du véhicule -->
+                <div
+                    class="mt-12 w-full max-w-lg lg:mt-0"
+                    style="animation: fadeInRight 0.8s ease-out;"
+                >
+                    <div class="relative">
+                        <!-- Décoration derrière l'image -->
+                        <div
+                            class="absolute -inset-4 rounded-3xl bg-violet-400/20 blur-2xl"
+                        ></div>
 
-                            <p class="mt-1 text-sm text-slate-500">
-                                Trouvez le trajet qui vous convient.
-                            </p>
-                        </div>
-
-                        <div class="space-y-4">
-                            <div>
-                                <label
-                                    class="mb-1 block text-sm font-medium text-slate-700"
-                                >
-                                    Départ
-                                </label>
-
-                                <input
-                                    type="text"
-                                    placeholder="Ex : Antananarivo"
-                                    class="w-full rounded-lg border-slate-300 shadow-sm focus:border-green-500 focus:ring-green-500"
-                                />
-                            </div>
-
-                            <div>
-                                <label
-                                    class="mb-1 block text-sm font-medium text-slate-700"
-                                >
-                                    Destination
-                                </label>
-
-                                <input
-                                    type="text"
-                                    placeholder="Ex : Toamasina"
-                                    class="w-full rounded-lg border-slate-300 shadow-sm focus:border-green-500 focus:ring-green-500"
-                                />
-                            </div>
-
-                            <div>
-                                <label
-                                    class="mb-1 block text-sm font-medium text-slate-700"
-                                >
-                                    Date du voyage
-                                </label>
-
-                                <input
-                                    type="date"
-                                    class="w-full rounded-lg border-slate-300 shadow-sm focus:border-green-500 focus:ring-green-500"
-                                />
-                            </div>
-
-                            <button
-                                type="button"
-                                class="w-full rounded-lg bg-green-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-green-700"
+                        <!-- Image -->
+                        <div
+                            class="relative overflow-hidden rounded-3xl border border-white/20 bg-white/10 shadow-2xl"
+                        >
+                            <img
+                                src="/images/voiture1.jpg"
+                                alt="Transport en bus"
+                                class="h-[360px] w-full object-cover transition duration-700 hover:scale-105"
+                            />
+                            <div
+                                class="absolute bottom-5 left-5 rounded-xl bg-white px-4 py-3 shadow-xl"
+                                style="animation: float 3s ease-in-out infinite;"
                             >
-                                Rechercher
-                            </button>
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 text-indigo-600"
+                                    >
+                                        ✓
+                                    </div>
+
+                                    <div>
+                                        <p
+                                            class="text-sm font-semibold text-slate-900"
+                                        >
+                                            Réservation simple
+                                        </p>
+
+                                        <p class="text-xs text-slate-500">
+                                            Rapide et pratique
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -173,7 +159,7 @@ defineProps({
                 <!-- Titre -->
                 <div class="mx-auto max-w-2xl text-center">
                     <p
-                        class="text-sm font-semibold uppercase tracking-wider text-green-600"
+                        class="text-sm font-semibold uppercase tracking-wider text-indigo-600"
                     >
                         Pourquoi nous choisir ?
                     </p>
